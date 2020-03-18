@@ -1,0 +1,57 @@
+<div mat-dialog-content>
+  <h2>Add user</h2>
+  <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()" class="add-form">
+    <mat-form-field class="add-form-full-width" appearance="legacy">
+      <mat-label>
+        First Name:
+      </mat-label>
+      <input type="text" matInput formControlName="firstName">
+      <div *ngIf="form.firstName.invalid && (form.firstName.dirty || form.firstName.touched)">
+        <mat-error *ngIf="form.firstName.errors.required"> First Name is required.</mat-error>
+        <mat-error *ngIf="form.firstName.errors.minlength"> First Name must be at least 3 characters long. </mat-error>
+        <mat-error *ngIf="form.firstName.errors.maxlength"> First Name must less then 255 characters. </mat-error>
+        <mat-error *ngIf="form.firstName.errors.nameError"> First Name must not contain numbers or special chars. </mat-error>
+      </div>
+
+    </mat-form-field>
+
+    <mat-form-field class="add-form-full-width">
+      <mat-label>
+        Last Name:
+      </mat-label>
+      <input type="text" matInput formControlName="lastName">
+      <div *ngIf="form.lastName.invalid && (form.lastName.dirty || form.lastName.touched)">
+        <mat-error *ngIf="form.lastName.errors.required"> Last Name is required.</mat-error>
+        <mat-error *ngIf="form.lastName.errors.minlength"> Last Name must be at least 3 characters long. </mat-error>
+        <mat-error *ngIf="form.lastName.errors.maxlength"> Last Name must less then 255 characters. </mat-error>
+        <mat-error *ngIf="form.lastName.errors.nameError"> Last Name must not contain numbers or special chars </mat-error>
+      </div>
+    </mat-form-field>
+    <mat-form-field class="add-form-full-width">
+      <mat-label>
+        Email:
+      </mat-label>
+      <input type="text" matInput formControlName="email">
+      <div *ngIf="form.email.invalid && (form.email.dirty || form.email.touched)">
+        <mat-error *ngIf="form.email.errors.required"> Email is required.</mat-error>
+        <mat-error *ngIf="form.email.errors.email"> The email is not valid </mat-error>
+        <mat-error *ngIf="form.email.errors.uniqueEmail"> The user with the email already exists. </mat-error>
+      </div>
+    </mat-form-field>
+    <mat-form-field class="add-form-full-width">
+      <mat-label>
+        Role:
+      </mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let role of roles" [value]="role.value">
+          {{role.title}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-error *ngIf="responseError">{{responseError}}</mat-error>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button mat-stroked-button color="primary" [disabled]="addUserForm.invalid || submitted" (click)="onSubmit()">Add</button>
+</div>

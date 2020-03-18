@@ -1,0 +1,78 @@
+<div class=" basic-container">
+  <mat-form-field class="filter-fields">
+    <mat-label>Role</mat-label>
+    <mat-select [formControl]="filters.role" (selectionChange)="roleChanged()">
+      <mat-option *ngFor="let role of roles" [value]="role.value">
+        {{role.title}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="filter-fields">
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="filters.search">
+  </mat-form-field>
+
+  <p align="right">
+  <span class="info_counts">
+    Total Artists: {{totalArtists}}, Total Designers: {{totalDesigners}}
+  </span>
+    <button mat-raised-button color="primary" (click)="openAddDialog()" >Add new row</button>
+  </p>
+  <div class="example-container mat-elevation-z8">
+    <div class="example-loading-shade"
+         *ngIf="isLoadingResults || isRateLimitReached">
+      <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+      <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+        API rate limit has been reached. It will be reset in one minute.
+      </div>
+    </div>
+
+    <div class="users-table-container">
+      <table mat-table [dataSource]="data" class="users-table"
+             matSort matSortActive="firstName" matSortDisableClear matSortDirection="desc">
+        <!-- First Name Column -->
+        <ng-container matColumnDef="firstName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>FirstName</th>
+          <td mat-cell *matCellDef="let row">{{row.firstName}}</td>
+        </ng-container>
+
+        <!-- Last Name Column -->
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>LastName</th>
+          <td mat-cell *matCellDef="let row">{{row.lastName}}</td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Email</th>
+          <td mat-cell *matCellDef="let row">{{row.email}}</td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear >Role</th>
+          <td mat-cell *matCellDef="let row">{{roleTitles[row.role]}}</td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="primary" aria-label="icon-button with a edit icon" (click)="openEditUserDialog(row)">
+              <mat-icon aria-hidden="false" aria-label="edit icon">edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" aria-label="icon-button with a delete icon" (click)="deleteUser(row._id)">
+              <mat-icon aria-hidden="false" aria-label="delete icon">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <mat-paginator [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+  </div>
+</div>
