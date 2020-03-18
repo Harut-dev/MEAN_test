@@ -18,20 +18,24 @@ const {
   MONGO_PASSWORD,
   MONGO_HOSTNAME,
   MONGO_PORT,
-  MONGO_DB
+  MONGO_DB,
+  REPLICA_SET,
 } = process.env;
 
-const options = {
+let options = {
   useNewUrlParser: true,
   connectTimeoutMS: 10000,
   useUnifiedTopology: true,
   useFindAndModify: false,
 };
 let url = '';
-if (MONGO_USERNAME && MONGO_PASSWORD) {
-   url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
+
+if (REPLICA_SET) {
+  url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}/${MONGO_DB}?replicaSet=${REPLICA_SET}`;
+} else if (MONGO_USERNAME && MONGO_PASSWORD) {
+  url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
 } else { // for local development
-   url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
+  url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
 }
 
 mongoose.connect(url, options).then( function() {
